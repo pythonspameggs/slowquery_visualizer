@@ -1,0 +1,2 @@
+MYSQL_ROOT_PASSWORD=slow_test
+MYSQL_DATABASE=slow_test

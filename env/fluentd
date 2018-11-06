@@ -1,0 +1,6 @@
+PATH_SLOWQUERYLOG=/tmp/mysql-slow.log
+DB_HOST=mysql
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=slow_test
+DATABASE=slow_test

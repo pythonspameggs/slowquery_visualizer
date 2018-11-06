@@ -1,0 +1,44 @@
+version: "3"
+services:
+  elasticsearch:
+    image: elasticsearch:6.4.2
+    volumes:
+      - ./es-data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    expose:
+      - 9300
+
+  fluentd:
+    build:
+      context: ./fluentd
+      dockerfile: Dockerfile
+    links:
+      - elasticsearch
+      - mysql
+    volumes:
+      - ./fluentd/log:/fluentd/log
+      - ./fluentd/etc/fluent.conf:/fluentd/etc/fluent.conf:ro
+      - ./mysql/logs/mysql-slow.log:/tmp/mysql-slow.log
+    env_file:
+      - env/fluentd
+      - env/elasticsearch
+    ports:
+      - 24224:24224
+
+  kibana:
+    image: kibana:6.4.2
+    ports:
+      - 5601:5601
+    links:
+      - elasticsearch
+
+  mysql:
+    image: mysql:5.5
+    volumes:
+      - ./mysql/cnf:/etc/mysql/conf.d
+      - ./mysql/logs:/var/log/mysql
+    ports:
+      - 3306:3306
+    env_file:
+      - env/mysql
