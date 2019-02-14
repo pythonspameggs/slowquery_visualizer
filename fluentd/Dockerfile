@@ -11,19 +11,20 @@ RUN apk add --no-cache perl perl-dbi perl-dbd-mysql perl-io-socket-ssl perl-term
     && make test \
     && make install
 
-FROM fluent/fluentd:latest
+FROM fluent/fluentd:v1.2.6
 
 # Fluentd plugin
 RUN buildDeps="ruby-dev gcc g++ libc-dev make wget" \
-    && apk add --no-cache $buildDeps \
+    && apk --update add --no-cache $buildDeps \
     && echo "http://dl-4.alpinelinux.org/alpine/edge/main/" >> /etc/apk/repositories \
-    && apk add --no-cache mariadb-connector-c-dev perl \
+    && apk --update add --no-cache mariadb-connector-c-dev perl \
     && gem install mysql2 \
     && gem install fluent-plugin-nata2 \
     && gem install fluent-plugin-mysql_explain \
     && gem install fluent-plugin-sql_fingerprint \
     && gem install fluent-plugin-slack \
     && gem install fluent-plugin-elasticsearch \
+    && gem install fluent-plugin-rewrite-tag-filter \
     && rm -rf /tmp/* /var/tmp/* /usr/lib/ruby/gems/*/cache/*.gem \
     && apk del $buildDeps
 
